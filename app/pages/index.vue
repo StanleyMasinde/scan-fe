@@ -123,6 +123,12 @@ onBeforeUnmount(() => {
 <template>
   <div class="flex items-center-safe border">
     <div class="w-full m-10">
+      <!-- Fallback Text -->
+      <div class="text-center" v-if="!supportsBarcodeDetector">
+        <h1 class="text-xl font-bold">Crucial Feature not available</h1>
+        <p class="text-lg">This Browser does not support The BarCode API</p>
+      </div>
+
       <!-- Preview -->
       <video
         v-if="supportsBarcodeDetector"
