@@ -125,17 +125,19 @@ onBeforeUnmount(() => {
     <div class="w-full m-10">
       <!-- Preview -->
       <video
+        v-if="supportsBarcodeDetector"
         class="border rounded-lg w-full object-cover"
         ref="videoPreview"
         autoplay
         playsinline
       />
-      <div class="text-center mt-2">
+      <div v-if="supportsBarcodeDetector" class="text-center mt-2">
         <p>Tap Scan Now to begin</p>
       </div>
 
       <div>
         <button
+          v-if="supportsBarcodeDetector"
           :disabled="isScanning"
           class="w-full bg-primary text-white py-2 rounded-lg disabled:bg-neutral disabled:text-gray-200"
           @click.prevent="startScanner()"
