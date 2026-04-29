@@ -151,6 +151,12 @@ onBeforeUnmount(() => {
           </p>
         </div>
 
+        <div v-if="errorMessage">
+          <p class="text-lg text-red-500">
+            An error occoured <b>{{ errorMessage }}</b>
+          </p>
+        </div>
+
         <div class="my-5">
           <NuxtLink
             class="py-2 px-3 my-5 bg-primary text-white rounded-lg"
