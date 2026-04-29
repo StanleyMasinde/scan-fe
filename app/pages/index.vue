@@ -144,16 +144,18 @@ onBeforeUnmount(() => {
         </button>
       </div>
 
+      <div class="mt-5 text-center">
+        <div v-if="errorMessage">
+          <p class="text-lg text-red-500">
+            An error occoured <b>{{ errorMessage }}</b>
+          </p>
+        </div>
+      </div>
+
       <div class="mt-5 text-center" v-if="detectedCode">
         <div>
           <p class="text-lg">
             EAN found! <b>{{ detectedCode }}</b>
-          </p>
-        </div>
-
-        <div v-if="errorMessage">
-          <p class="text-lg text-red-500">
-            An error occoured <b>{{ errorMessage }}</b>
           </p>
         </div>
 
