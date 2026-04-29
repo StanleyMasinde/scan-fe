@@ -4,6 +4,20 @@ const isScanning = ref(false);
 const detectedCode = ref<string | undefined>(undefined);
 const errorMessage = ref<string | undefined>(undefined);
 
+const isiOS = () => /iP(hone|ad|od)/.test(navigator.userAgent);
+
+const ismacOS = () => navigator.userAgent.includes("Mac") && !isiOS();
+
+const getSafariInstructions = () => {
+  if ("BarcodeDetector" in window) return;
+
+  return isiOS()
+    ? "Go to Settings → Safari → Advanced → Feature Flags, then enable Shape Detection API."
+    : ismacOS()
+      ? "Open Safari → Settings → Advanced, enable 'Show Develop menu', then go to Develop → Experimental Features and enable Shape Detection API."
+      : undefined;
+};
+
 let stream: MediaStream | undefined = undefined;
 let detector:
   | {
@@ -121,12 +135,13 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex items-center-safe border">
+  <div class="flex items-center-safe border rounded-lg">
     <div class="w-full m-10">
       <!-- Fallback Text -->
-      <div class="text-center" v-if="!supportsBarcodeDetector">
+      <div class="" v-if="!supportsBarcodeDetector">
         <h1 class="text-xl font-bold">Crucial Feature not available</h1>
         <p class="text-lg">This Browser does not support The BarCode API</p>
+        <p>{{ getSafariInstructions() }}</p>
       </div>
 
       <!-- Preview -->
