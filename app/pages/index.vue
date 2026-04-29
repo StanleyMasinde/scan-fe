@@ -4,6 +4,20 @@ const isScanning = ref(false);
 const detectedCode = ref<string | undefined>(undefined);
 const errorMessage = ref<string | undefined>(undefined);
 
+const isiOS = () => /iP(hone|ad|od)/.test(navigator.userAgent);
+
+const ismacOS = () => navigator.userAgent.includes("Mac") && !isiOS();
+
+const getSafariInstructions = () => {
+  if ("BarcodeDetector" in window) return;
+
+  return isiOS()
+    ? "Go to Settings → Safari → Advanced → Feature Flags, then enable Shape Detection API."
+    : ismacOS()
+      ? "Open Safari → Settings → Advanced, enable 'Show Develop menu', then go to Develop → Experimental Features and enable Shape Detection API."
+      : undefined;
+};
+
 let stream: MediaStream | undefined = undefined;
 let detector:
   | {
@@ -121,27 +135,44 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-  <div class="flex items-center-safe border">
+  <div class="flex items-center-safe border rounded-lg">
     <div class="w-full m-10">
+      <!-- Fallback Text -->
+      <div class="" v-if="!supportsBarcodeDetector">
+        <h1 class="text-xl font-bold">Crucial Feature not available</h1>
+        <p class="text-lg">This Browser does not support The BarCode API</p>
+        <p>{{ getSafariInstructions() }}</p>
+      </div>
+
       <!-- Preview -->
       <video
+        v-if="supportsBarcodeDetector"
         class="border rounded-lg w-full object-cover"
         ref="videoPreview"
         autoplay
         playsinline
       />
-      <div class="text-center mt-2">
+      <div v-if="supportsBarcodeDetector" class="text-center mt-2">
         <p>Tap Scan Now to begin</p>
       </div>
 
       <div>
         <button
+          v-if="supportsBarcodeDetector"
           :disabled="isScanning"
           class="w-full bg-primary text-white py-2 rounded-lg disabled:bg-neutral disabled:text-gray-200"
           @click.prevent="startScanner()"
         >
           {{ isScanning ? "Scanning" : "Scan Now" }}
         </button>
+      </div>
+
+      <div class="mt-5 text-center">
+        <div v-if="errorMessage">
+          <p class="text-lg text-red-500">
+            An error occoured <b>{{ errorMessage }}</b>
+          </p>
+        </div>
       </div>
 
       <div class="mt-5 text-center" v-if="detectedCode">
