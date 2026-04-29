@@ -68,16 +68,7 @@ async function startScanner() {
       window as typeof window & { BarcodeDetector: new (...args: any[]) => any }
     ).BarcodeDetector;
     detector = new DetectorCtor({
-      formats: [
-        "aztec",
-        "ean_13",
-        "code_128",
-        "code_39",
-        "codabar",
-        "qr_code",
-        "upc_a",
-        "upc_e",
-      ],
+      formats: ["ean_13"],
     });
 
     isScanning.value = true;
